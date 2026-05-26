@@ -1,6 +1,16 @@
-a = int(input("first_num"))
-b = int(input("first_num"))
+a = int(input("first_num:"))
+operator = input("operator(+,-,*,/):")
+b = int(input("Second_num:"))
 
-result = a + b 
+if operator == "+":
+    result = a + b
+elif operator == "-":
+    result = a - b
+elif operator == "*":
+    result = a * b
+elif operator == "/":
+    result = a / b
+else:
+    result = "unknown operator"
 
 print("result",result)
