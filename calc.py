@@ -2,7 +2,6 @@ from datetime import datetime
 
 HISTORY_FILE = "history.txt"
 
-
 def calculate(a, operator, b):
     if operator == "+":
         return a + b
