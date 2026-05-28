@@ -1,8 +1,8 @@
 import time
 
-def sum_loop(n):
+def sumloop(n):
     total = 0
-    for i in range(n):
+    for i in range(1,n+1):
         total += i
     return total
 
@@ -10,7 +10,7 @@ n = int(input("nの値を入力してください\n"))
 print("n=10,000~10,000,000")
 
 start = time.perf_counter()
-result = sum_loop(n)
+result = sumloop(n)
 end = time.perf_counter()
 elapsed = end - start
 
