@@ -1,6 +1,9 @@
-a = int(input("first_num:"))
-operator = input("operator(+,-,*,/):")
-b = int(input("Second_num:"))
+print("Simple Calculator")
+print("Available operators: +, -, *, /")
+
+a = int(input("first number: "))
+operator = input("operator: ")
+b = int(input("second number: "))
 
 if operator == "+":
     result = a + b
@@ -9,8 +12,11 @@ elif operator == "-":
 elif operator == "*":
     result = a * b
 elif operator == "/":
-    result = a / b
+    if b == 0:
+        result = "cannot divide by zero"
+    else:
+        result = a / b
 else:
     result = "unknown operator"
 
-print("result",result)
+print("result:", result)
