@@ -1,3 +1,31 @@
+from datetime import datetime
+
+HISTORY_FILE = "history.txt"
+
+
+def calculate(a, operator, b):
+    if operator == "+":
+        return a + b
+    elif operator == "-":
+        return a - b
+    elif operator == "*":
+        return a * b
+    elif operator == "/":
+        if b == 0:
+            return "cannot divide by zero"
+        return a / b
+    else:
+        return "unknown operator"
+
+
+def save_history(a, operator, b, result):
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    line = f"{now} | {a} {operator} {b} = {result}\n"
+
+    with open(HISTORY_FILE, "a", encoding="utf-8") as file:
+        file.write(line)
+
+
 print("Simple Calculator")
 print("Available operators: +, -, *, /")
 print("Type q to quit")
@@ -25,21 +53,10 @@ while True:
         a = int(first_input)
         b = int(second_input)
 
-        if operator == "+":
-            result = a + b
-        elif operator == "-":
-            result = a - b
-        elif operator == "*":
-            result = a * b
-        elif operator == "/":
-            if b == 0:
-                result = "cannot divide by zero"
-            else:
-                result = a / b
-        else:
-            result = "unknown operator"
-
+        result = calculate(a, operator, b)
         print("result:", result)
+
+        save_history(a, operator, b, result)
 
     except ValueError:
         print("please enter numbers only")
