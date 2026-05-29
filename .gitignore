@@ -1,3 +1,5 @@
 array_sum
 array_sum_O0
 array_sum_O2
+.venv/
+__pycache__/

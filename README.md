@@ -1,266 +1,189 @@
-# linux-python-practice
+# Linux Python CS Practice
 
-start date : 2026-5-26
+Practical learning logs and small experiments for Linux, Python, Git/GitHub, C language, and computer science fundamentals.
 
-## Goal
+This repository is built as a record of hands-on study: writing code, measuring behavior, debugging errors, explaining the result, and pushing progress to GitHub.
 
-Linux,GIT,python,web,API,DB,Dockerを１年で実務レベルに引き上げる。
+## Purpose
 
-## Today
+The goal of this repository is to connect implementation experience with computer science fundamentals.
 
-* WSL/Ubuntuを確認した
-* Linuxの基本コマンドを触った
-* 学習用フォルダを作った
+Main focus:
 
-## Commands
+- Linux / WSL operation
+- Git and GitHub workflow
+- Python programming
+- C language and memory
+- Performance measurement
+- Compiler optimization
+- Profiling and bottleneck analysis
+- NumPy / vectorized computation
+- Multiprocessing and parallel execution
 
-* pwd
-* ls
-* cd
-* mkdir
+## Learning Units
 
-## Day 2
+| Unit | Topic | Main files | Main concepts |
+|---:|---|---|---|
+| 1 | Linux / Git setup | `README.md` | WSL, shell commands, Git commit |
+| 2 | Python calculator | `calc.py` | `input()`, `int()`, variables, arithmetic |
+| 3 | Python errors / Markdown | `README.md` | syntax errors, Markdown, command practice |
+| 4 | Calculator improvement | `calc.py` | `if`, `elif`, `else`, division by zero |
+| 5 | File I/O and logging | `calc.py`, `history.txt` | file writing, logs, storage |
+| 6 | Benchmarking basics | `bench_test.py` | elapsed time, `time.perf_counter()` |
+| 7 | Memory benchmark | `memory_bench_test.py` | memory hierarchy, cache intuition |
+| 8 | Branch benchmark | `branch_bench_test.py` | branch, branch prediction, control flow |
+| 9 | C array and memory | `array_sum.c` | arrays, addresses, compile and execute |
+| 10 | Compiler optimization | `array_sum.c` | `gcc -O0`, `gcc -O2`, warnings |
+| 11 | Profiling | `profile_test.py` | profiling, bottleneck, measurement-driven improvement |
+| 12 | Vectorization / NumPy | `vector_test.py` | NumPy ndarray, vectorization, SIMD intuition |
+| 13 | Multiprocessing | `multiprocessing_test.py` | process, CPU cores, overhead, parallelism |
 
-* calc.py を作った
-* Pythonで足し算を実行した
-* input() で入力を受け取った
-* int() で文字列を数値に変換した
+## What I Learned
 
-## Python notes
+### Measurement Before Optimization
 
-* print() は画面に表示する
-* input() はキーボード入力を受け取る
-* int() は文字列を整数に変換する
+I practiced measuring execution time before guessing performance problems.
 
-## Day 3
+Examples:
 
-* calc.py の入力表示を改善した
-* +, -, \*, / を選べるようにした
-* if / elif / else を使った
-* git diff でcommit前の変更内容を確認した
+- Python loop benchmark
+- C `-O0` vs `-O2` comparison
+- profiling by function
+- NumPy vs Python loop comparison
+- single process vs multi process comparison
 
-## Python notes
+### Python And C Execution Models
 
-* if は条件分岐に使う
-* elif は追加の条件に使う
-* else はどの条件にも当てはまらない場合に使う
+Python code is executed by the Python interpreter, while C code is compiled into an executable file before running.
 
-## Day 4
+Python:
 
-* calc.py を四則演算に対応させた
-* if / elif / else で条件分岐を使った
-* 0で割る場合の処理を追加した
-* git diff でcommit前の変更を確認した
-* input() で受け取った文字列を int() で数値に変換する流れを確認した
+```bash
+python3 bench_test.py
+```
 
-## Architecture notes
+C:
 
-* input() の値は最初は文字列
-* int() によって文字列が数値に変換される
-* if文は条件によってプログラムの流れを変える
-* 足し算や引き算はCPU内部ではALUが担当する
-* 変数の値はメモリ上に保持される
+```bash
+gcc array_sum.c -o array_sum
+./array_sum
+```
 
-## Day 6
+This helped me understand why C can be much faster for simple tight loops, and why optimized libraries such as NumPy are important in Python.
 
-* bench\_test.py を作成した
-* time.perf\_counter() で処理時間を測った
-* n=1000000 のとき約0.04秒だった
-* n=10000000 のとき約0.24〜0.29秒だった
-* 入力値が大きくなると、ループ回数が増えて処理時間も増えることを確認した
+### Memory And Data Layout
 
-## Day 7
+I compared Python lists, C arrays, and NumPy arrays.
 
-* memory\_bench\_test.py を作成した
-* 1からnまでの数字をリストとしてメモリ上に作成した
-* そのリストを順番に読みながら合計した
-* time.perf\_counter() を使って、合計処理にかかる時間を測定した
-* n=1,000,000 のとき約0.017秒だった
-* n=10,000,000 のとき約0.210秒だった
-
-## Day 9
-
-* array\_sum.c を作成した
-* C言語で配列の合計を計算した
-* gccでCコードをコンパイルした
-* 配列要素のアドレスを表示した
-* Cの配列は同じ型の値がメモリ上に連続して並ぶことを学んだ
-
-Pythonでは、listは主にオブジェクトへの参照を並べている。
-一方、C言語の配列では、同じ型の値がメモリ上に連続して並ぶ。
-Pythonのlist:
-\[参照]\[参照]\[参照]\[参照]\[参照]
-↓     ↓     ↓     ↓     ↓
-1     2     3     4     5
-
-Cのint配列:
-\[1]\[2]\[3]\[4]\[5]
-
-\## Day 10
-
-
-
-\- C言語の `array\_sum.c` を使って、実行時間を測定した
-
-\- `gcc -O0` と `gcc -O2` でコンパイルし、実行時間を比較した
-
-\- 同じCコードでも、コンパイラ最適化によって実行時間が変わることを確認した
-
-\- PythonとCの実行方式の違いを学んだ
-
-\- `scanf` の戻り値を無視している warning を観察した
-
-\- warning を入力チェックに活かすことで、安全性・堅牢性の向上につながることを学んだ
-
-
-
-\## Result
-
-
-
-| N | C `-O0` | C `-O2` |
-
-|---:|---:|---:|
-
-| 1,000,000 | 0.003738秒 | 0.000748秒 |
-
-| 10,000,000 | 0.040035秒 | 0.007263秒 |
-
-Pythonでは、`.py` ファイルをCPUが直接実行しているわけじゃない。
-
-## Day 11
-
-## Day 11
-
-- profile_test.py を作成した
-- 処理を make_num(), sum_num(), sum_without_list() に分けた
-- time.perf_counter() で処理ごとの実行時間を測定した
-- リスト作成ありの合計処理と、リストを作らず直接合計する処理を比較した
-- profiling によって、どの処理が時間を使っているかを確認した
-- bottleneck の考え方を学んだ
-
-## Result
-
-| N | make_numbers | sum_numbers | sum_without_list | total |
-|---:|---:|---:|---:|---:|
-| 1,000,000 | 0.043秒 | 0.017秒 | 0.021秒 | 0.081秒 |
-| 10,000,000 | 0.246秒 | 0.194秒 | 0.220秒 | 0.660秒 |
-
-## CS Connection
-
-### Profiling
-
-Profilingは、プログラムのどの部分が時間を使っているかを調べること。
-
-全体の実行時間だけを見ると、どこが遅いのか分からない。
-
-今回のコードでは、以下の処理を分けて測定した。
-
-```python
-make_num()
-sum_num()
-sum_without_list()
-## Day 12
-
-- `vector_test.py` を作成した
-- Pythonのfor文による合計処理と、NumPyによる合計処理を比較した
-- NumPy ndarray と Python list の違いを学んだ
-- NumPyの `int64` 配列では、Python intオブジェクトへの参照ではなく、数値データが連続して並ぶことを学んだ
-- SIMD / vectorization の入口を学んだ
-
-## Result
-
-| N | Python for | NumPy |
-|---:|---:|---:|
-| 100,000 | 0.00713秒 | 0.00386秒 |
-| 10,000,000 | 0.29464秒 | 0.04107秒 |
-
-## CS Connection
-
-### SIMD
-
-SIMDは `Single Instruction, Multiple Data` の略である。
-
-1つの命令で複数のデータをまとめて処理する考え方であり、数値計算や配列処理で性能向上につながる。
-
-今回の実験だけで、NumPyが必ずSIMDを使ったと断定することはできない。  
-しかし、Pythonのfor文で1個ずつ処理する場合と、NumPyのような最適化された配列処理では、実行時間に大きな差が出ることを確認できた。
-
-### Vectorization
-
-Vectorizationは、1つずつ処理するループを、配列やベクトル単位でまとめて処理できる形にすること。
-
-Pythonのfor文では、Pythonインタプリタが1回ずつ処理するため、大量ループでは遅くなりやすい。
-
-一方、NumPyは内部でC言語などによる高速な実装を使っており、連続した数値データを効率よく処理できる。
-
-### Python list and NumPy ndarray
-
-Pythonのlistは、主にPythonオブジェクトへの参照を並べている。
-
-一方、今回のNumPy配列は `dtype=np.int64` を指定しており、`int64` の数値データが連続したメモリ領域に並ぶ。
+Python list:
 
 ```text
-Python list:
-[参照][参照][参照][参照]
-  ↓     ↓     ↓     ↓
- PyInt PyInt PyInt PyInt
-## Day 13
+[reference][reference][reference]
+     |          |          |
+   PyInt      PyInt      PyInt
+```
 
-- multiprocessingを使って、single processとmulti processの実行時間を比較した
-- CPUコア数を `os.cpu_count()` で確認した
-- workers数を入力し、使用するプロセス数を変えて測定した
-- 小さい処理では並列化のoverheadにより遅くなる場合があることを確認した
-- 大きい処理ではmulti processの方が速くなる場合があることを確認した
+C / NumPy numeric array:
 
-## Result
+```text
+[number][number][number]
+```
 
-| N | workers | single | multi |
-|---:|---:|---:|---:|
-| 1,000,000 | 4 | 0.037秒 | 0.123秒 |
-| 1,000,000 | 10 | 0.047秒 | 0.047秒 |
-| 10,000,000 | 4 | 0.233秒 | 0.125秒 |
-| 10,000,000 | 10 | 0.225秒 | 0.098秒 |
+This is important for understanding performance, cache behavior, and vectorized computation.
 
-## CS Connection
+### Parallelism Is Not Always Faster
 
-### Multiprocessing
+In the multiprocessing experiment, small workloads became slower because of overhead.
 
-Multiprocessingは、複数のプロセスを使って処理を分担する方法である。
+For larger workloads, multiprocessing became faster.
 
-現代のCPUには複数のコアがあるため、処理を分割できれば、複数コアで同時に進められる可能性がある。
+This showed that parallel execution must be measured, not assumed.
 
-今回のPCでは、`os.cpu_count()` によりCPU数が12であることを確認した。
+## How To Run
 
-### Overhead
+Python examples:
 
-Overheadは、目的の処理そのもの以外に追加でかかるコストである。
+```bash
+python3 bench_test.py
+python3 memory_bench_test.py
+python3 branch_bench_test.py
+python3 profile_test.py
+python3 vector_test.py
+python3 multiprocessing_test.py
+```
 
-multi processでは、以下のようなoverheadがある。
+C examples:
 
-- プロセスを作る
-- 処理範囲を分ける
-- 各プロセスに仕事を渡す
-- 結果を集める
-- 最後に合計する
-- OSがプロセスを管理する
+```bash
+gcc array_sum.c -o array_sum
+./array_sum
+```
 
-N=1,000,000では処理本体が軽く、overheadの影響でmulti processが遅くなる場合があった。
+Compiler optimization comparison:
 
-一方、N=10,000,000では処理本体が重くなり、multi processの方が速くなった。
+```bash
+gcc -O0 array_sum.c -o array_sum_O0
+gcc -O2 array_sum.c -o array_sum_O2
+./array_sum_O0
+./array_sum_O2
+```
 
-### Scaling
+## Requirements
 
-workers数を増やしても、速度がそのまま比例して上がるとは限らない。
+Python dependencies are listed in `requirements.txt`.
 
-今回、workers=10でもsingle processの10倍速にはならなかった。
+Install them with:
 
-これは、並列化にはoverheadがあり、CPUコア数、メモリアクセス、OSのスケジューリング、Pythonのmultiprocessingの管理コストなどが影響するためである。
+```bash
+python3 -m pip install -r requirements.txt
+```
 
-### Practical meaning
+Current dependency:
 
-実務では、並列化すれば必ず速くなるわけではない。
+```text
+numpy
+```
 
-処理本体が十分に重く、分割しやすく、結果を集めるコストが小さい場合に、並列処理の効果が出やすい。
+## Git / GitHub Policy
 
-そのため、並列化する前後で必ず測定する必要がある。
+Source code and learning notes are tracked.
+
+Generated files are ignored by `.gitignore`.
+
+Examples of ignored files:
+
+- C executables such as `array_sum`, `array_sum_O0`, `array_sum_O2`
+- Python cache files such as `__pycache__/`
+- local virtual environments such as `.venv/`
+
+## Current Status
+
+Completed through Unit 13:
+
+- benchmarking
+- memory and cache intuition
+- branch behavior
+- C arrays and addresses
+- compiler optimization
+- profiling
+- NumPy vectorization
+- multiprocessing
+
+## Next Topics
+
+- Unit 14: review and explanation practice
+- Unit 15: mini OS preparation
+- QEMU experiment
+- HTTP / API / database
+- Docker
+- AI API integration
+
+## Related Portfolio
+
+I also developed and deployed a learning support web application:
+
+Focus Grove:
+
+```text
+https://focus-grove.onrender.com/login
+```
