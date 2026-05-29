@@ -1,107 +1,119 @@
 # Linux Python CS Practice
 
-Practical learning logs and small experiments for Linux, Python, Git/GitHub, C language, and computer science fundamentals.
+Linux、Python、Git/GitHub、C言語、コンピュータサイエンス基礎を、実装・測定・説明を通して学習するためのリポジトリです。
 
-This repository is built as a record of hands-on study: writing code, measuring behavior, debugging errors, explaining the result, and pushing progress to GitHub.
+このリポジトリでは、ただコードを書くのではなく、以下の流れを重視しています。
 
-## Purpose
+```text
+コードを書く
+↓
+実行して結果を見る
+↓
+処理時間や挙動を測定する
+↓
+CPU・メモリ・OS・コンパイラなどのCS基礎と結び付けて説明する
+↓
+Git/GitHubで記録する
+```
 
-The goal of this repository is to connect implementation experience with computer science fundamentals.
+## 目的
 
-Main focus:
+1年間で、情報系の基礎知識と実装経験を結び付け、長期インターンや就職活動で説明できる実務的な力を身につけることを目的にしています。
 
-- Linux / WSL operation
-- Git and GitHub workflow
-- Python programming
-- C language and memory
-- Performance measurement
-- Compiler optimization
-- Profiling and bottleneck analysis
-- NumPy / vectorized computation
-- Multiprocessing and parallel execution
+特に意識していることは以下です。
 
-## Learning Units
+- Linux / WSL の基本操作
+- Git / GitHub による変更履歴管理
+- Pythonによる小さな実装
+- C言語によるメモリ・配列・コンパイルの理解
+- 処理時間の測定
+- コンパイラ最適化
+- プロファイリングとボトルネック分析
+- NumPyによるベクトル化の入口
+- multiprocessingによる並列処理
+- 学んだことをREADMEに説明として残すこと
 
-| Unit | Topic | Main files | Main concepts |
+## 学習Unit一覧
+
+| Unit | テーマ | 主なファイル | 学んだ主な内容 |
 |---:|---|---|---|
-| 1 | Linux / Git setup | `README.md` | WSL, shell commands, Git commit |
-| 2 | Python calculator | `calc.py` | `input()`, `int()`, variables, arithmetic |
-| 3 | Python errors / Markdown | `README.md` | syntax errors, Markdown, command practice |
-| 4 | Calculator improvement | `calc.py` | `if`, `elif`, `else`, division by zero |
-| 5 | File I/O and logging | `calc.py`, `history.txt` | file writing, logs, storage |
-| 6 | Benchmarking basics | `bench_test.py` | elapsed time, `time.perf_counter()` |
-| 7 | Memory benchmark | `memory_bench_test.py` | memory hierarchy, cache intuition |
-| 8 | Branch benchmark | `branch_bench_test.py` | branch, branch prediction, control flow |
-| 9 | C array and memory | `array_sum.c` | arrays, addresses, compile and execute |
-| 10 | Compiler optimization | `array_sum.c` | `gcc -O0`, `gcc -O2`, warnings |
-| 11 | Profiling | `profile_test.py` | profiling, bottleneck, measurement-driven improvement |
-| 12 | Vectorization / NumPy | `vector_test.py` | NumPy ndarray, vectorization, SIMD intuition |
-| 13 | Multiprocessing | `multiprocessing_test.py` | process, CPU cores, overhead, parallelism |
+| 1 | Linux / Git 初期設定 | `README.md` | WSL、シェル、Git commit |
+| 2 | Python電卓 | `calc.py` | `input()`、`int()`、変数、四則演算 |
+| 3 | Pythonエラー / Markdown | `README.md` | 構文エラー、Markdown、基本コマンド |
+| 4 | 電卓の改善 | `calc.py` | `if`、`elif`、`else`、0除算 |
+| 5 | ファイルI/Oとログ保存 | `calc.py`, `history.txt` | ファイル書き込み、ログ、ストレージ |
+| 6 | ベンチマーク入門 | `bench_test.py` | 経過時間、`time.perf_counter()` |
+| 7 | メモリ階層・キャッシュ | `memory_bench_test.py` | メモリ、キャッシュ、逐次アクセス |
+| 8 | 分岐とbranch prediction | `branch_bench_test.py` | if文、分岐、制御フロー |
+| 9 | C言語とメモリ | `array_sum.c` | 配列、アドレス、コンパイル |
+| 10 | コンパイラ最適化 | `array_sum.c` | `gcc -O0`、`gcc -O2`、warning |
+| 11 | プロファイリング | `profile_test.py` | profiling、bottleneck、測定による改善 |
+| 12 | SIMD / ベクトル化 | `vector_test.py` | NumPy ndarray、vectorization、SIMDの入口 |
+| 13 | マルチコア / multiprocessing | `multiprocessing_test.py` | process、CPUコア、overhead、並列処理 |
 
-## What I Learned
+## 学んだこと
 
-### Measurement Before Optimization
+### 1. 測定してから改善する
 
-I practiced measuring execution time before guessing performance problems.
+プログラムが速いか遅いかを感覚で判断するのではなく、`time.perf_counter()` やCの `clock()` を使って処理時間を測定しました。
 
-Examples:
+測定した例:
 
-- Python loop benchmark
-- C `-O0` vs `-O2` comparison
-- profiling by function
-- NumPy vs Python loop comparison
-- single process vs multi process comparison
+- Pythonのループ処理
+- C言語の `-O0` と `-O2` の比較
+- 関数ごとのprofiling
+- Python for文とNumPyの比較
+- single process と multi process の比較
 
-### Python And C Execution Models
+### 2. PythonとCの実行方式の違い
 
-Python code is executed by the Python interpreter, while C code is compiled into an executable file before running.
-
-Python:
+Pythonでは、`.py` ファイルをCPUが直接実行しているわけではなく、`python3` がコードを読みながら実行します。
 
 ```bash
 python3 bench_test.py
 ```
 
-C:
+C言語では、`.c` ファイルをそのまま実行するのではなく、`gcc` で実行ファイルを作ってから実行します。
 
 ```bash
 gcc array_sum.c -o array_sum
 ./array_sum
 ```
 
-This helped me understand why C can be much faster for simple tight loops, and why optimized libraries such as NumPy are important in Python.
+この違いから、単純な大量ループではCの方が速くなりやすいことを確認しました。
 
-### Memory And Data Layout
+### 3. メモリ上のデータの持ち方
 
-I compared Python lists, C arrays, and NumPy arrays.
+Pythonのlist、Cの配列、NumPy配列の違いを学びました。
 
 Python list:
 
 ```text
-[reference][reference][reference]
-     |          |          |
-   PyInt      PyInt      PyInt
+[参照][参照][参照]
+  ↓     ↓     ↓
+ PyInt PyInt PyInt
 ```
 
-C / NumPy numeric array:
+C配列 / NumPyの数値配列:
 
 ```text
-[number][number][number]
+[数値][数値][数値]
 ```
 
-This is important for understanding performance, cache behavior, and vectorized computation.
+Python listは柔軟ですが、数値計算では管理コストが大きくなりやすいです。  
+一方、C配列やNumPyの `int64` 配列では、同じ型の数値データが連続して並ぶため、大量データ処理に向いています。
 
-### Parallelism Is Not Always Faster
+### 4. 並列処理は必ず速いわけではない
 
-In the multiprocessing experiment, small workloads became slower because of overhead.
+`multiprocessing` を使い、single process と multi process の処理時間を比較しました。
 
-For larger workloads, multiprocessing became faster.
+小さい処理では、プロセスを作る・仕事を分ける・結果を集めるといった `overhead` により、multi processの方が遅くなる場合がありました。
 
-This showed that parallel execution must be measured, not assumed.
+一方、大きい処理では、複数コアで処理を分担する効果が出て、multi processの方が速くなる場合がありました。
 
-## How To Run
+## 実行方法
 
-Python examples:
+Pythonの例:
 
 ```bash
 python3 bench_test.py
@@ -112,14 +124,14 @@ python3 vector_test.py
 python3 multiprocessing_test.py
 ```
 
-C examples:
+C言語の例:
 
 ```bash
 gcc array_sum.c -o array_sum
 ./array_sum
 ```
 
-Compiler optimization comparison:
+コンパイラ最適化の比較:
 
 ```bash
 gcc -O0 array_sum.c -o array_sum_O0
@@ -128,61 +140,67 @@ gcc -O2 array_sum.c -o array_sum_O2
 ./array_sum_O2
 ```
 
-## Requirements
+## 必要ライブラリ
 
-Python dependencies are listed in `requirements.txt`.
+Pythonの外部ライブラリは `requirements.txt` に記録しています。
 
-Install them with:
+インストール:
 
 ```bash
 python3 -m pip install -r requirements.txt
 ```
 
-Current dependency:
+現在使用している主なライブラリ:
 
 ```text
 numpy
 ```
 
-## Git / GitHub Policy
+## Git / GitHubでの管理方針
 
-Source code and learning notes are tracked.
+ソースコードと学習ログはGitで管理します。
 
-Generated files are ignored by `.gitignore`.
+一方、コンパイルで生成される実行ファイルや、環境ごとに作られるファイルは `.gitignore` で除外します。
 
-Examples of ignored files:
+除外している例:
 
-- C executables such as `array_sum`, `array_sum_O0`, `array_sum_O2`
-- Python cache files such as `__pycache__/`
-- local virtual environments such as `.venv/`
+- `array_sum`
+- `array_sum_O0`
+- `array_sum_O2`
+- `.venv/`
+- `__pycache__/`
 
-## Current Status
+## 現在の到達地点
 
-Completed through Unit 13:
+Unit 13まで完了しています。
 
-- benchmarking
-- memory and cache intuition
-- branch behavior
-- C arrays and addresses
-- compiler optimization
-- profiling
-- NumPy vectorization
-- multiprocessing
+現在理解した主な内容:
 
-## Next Topics
+- Linux / WSLでの開発操作
+- Git/GitHubによる履歴管理
+- Pythonの基本文法
+- ファイルI/Oとログ保存
+- ベンチマーク
+- メモリ階層とキャッシュの入口
+- 分岐と制御フロー
+- C言語の配列とアドレス
+- コンパイラ最適化
+- profilingとbottleneck
+- NumPyによるベクトル化
+- multiprocessingによる並列処理
 
-- Unit 14: review and explanation practice
-- Unit 15: mini OS preparation
-- QEMU experiment
-- HTTP / API / database
+## 今後の予定
+
+- Unit 14: 総復習・説明化
+- Unit 15: ミニOS開発の準備
+- QEMUを使った小さいOS実験
+- HTTP / API / DB
 - Docker
-- AI API integration
+- AI APIの活用
 
-## Related Portfolio
+## 関連成果物
 
-I also developed and deployed a learning support web application:
-
-Focus Grove:
+学習支援Webアプリ「Focus Grove」も開発・公開しています。
 
 ```text
 https://focus-grove.onrender.com/login
