@@ -10,28 +10,32 @@ def sum_range(args):
         total += i
 
     return total
-
+##CPU一つ
 def single_process_sum(n):
     return sum_range((1, n + 1))
 
+##CPU N個の処理
 def multi_process_sum(n, workers):
     chunk_size = n // workers
+    ##処理をプロセッサ分に分ける。
     ranges = []
 
     start = 1
     for worker_id in range(workers):
         if worker_id == workers - 1:
             end = n + 1
+            ##割り切れない場合の処理
         else:
             end = start + chunk_size
 
         ranges.append((start, end))
         start = end
-
+##今回における並行処理の核
     with Pool(processes=workers) as pool:
-        partial_results = pool.map(sum_range, ranges)
-
-    return sum(partial_results)
+            part_results = pool.map(sum_range, ranges)
+##pool.map()によって複数プロセスに配って実行している。
+    
+    return sum(part_results)
 
 def decide_workers(requested_workers):
     cpu_count = os.cpu_count()
