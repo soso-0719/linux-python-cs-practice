@@ -1,25 +1,23 @@
 code = bytes([
-    0xBE, 0x10, 0x7C,  # mov si, 0x7c10
+    0x31, 0xC0,              # xor ax, ax
+    0x8E, 0xD8,              # mov ds, ax
+    0x8E, 0xC0,              # mov es, ax
 
-    0x8A, 0x04,        # mov al, [si]
-    0x3C, 0x00,        # cmp al, 0　０で終わりにするため。
-    0x74, 0x07,        # je done
+    
+    0xB4, 0x02,              # mov ah, 0x02
+    0xB0, 0x09,              # mov al, 9 sectors
+    0xB5, 0x00,              # mov ch, 0
+    0xB1, 0x02,              # mov cl, 2
+    0xB6, 0x00,              # mov dh, 0
+    0xBB, 0x00, 0x10,        # mov bx, 0x1000
+    0xCD, 0x13,              # int 0x13
 
-    0xB4, 0x0E,        # mov ah, 0x0e
-    0xCD, 0x10,        # int 0x10
-
-    0x46,              # inc si  siの参照、アドレスに+１する。
-    0xEB, 0xF3,        # jmp loop　上に戻って繰り返し、　
-
-    0xEB, 0xFE,        # done: infinite loop
+    # 0x1000にカーネル移動
+    0xEA, 0x00, 0x10, 0x00, 0x00,  # jmp 0x0000:0x1000
 ])
-
-message = b"Soichiro OS Booted!\0"
-##biosなら0x7c00（配列の最初の要素のメモリアドレス） + 0x0010に置かれるらしい。
 
 boot = bytearray(512)
 boot[0:len(code)] = code
-boot[0x10:0x10 + len(message)] = message
 boot[510] = 0x55
 boot[511] = 0xAA
 
@@ -27,3 +25,4 @@ with open("boot.bin", "wb") as f:
     f.write(boot)
 
 print("boot.bin created")
+print("boot size:", len(boot))

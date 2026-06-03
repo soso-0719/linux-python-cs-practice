@@ -3,3 +3,7 @@ array_sum_O0
 array_sum_O2
 .venv/
 __pycache__/
+# mini OS generated files
+mini_os/*.o
+mini_os/*.elf
+mini_os/*.bin
