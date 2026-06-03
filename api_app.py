@@ -43,7 +43,40 @@ def add():
         "b": b,
         "result": result
     })
+##jsonから足し算するAPI
+@app.route("/add-json", methods=["POST"])
+def add_json():
+    ##リクエストボディのJSONをpythonのディクショナリとして受け取る
+    data = request.get_json()
 
-##サーバー起動　このファイルを起動したら最初にする処理。
+    if data is None:
+        return jsonify({
+            "error": "JSON body is required"
+        }), 400
+
+    a = data.get("a")
+    b = data.get("b")
+
+    if a is None or b is None:
+        return jsonify({
+            "error": "a and b are required"
+        }), 400
+
+    try:
+        a = int(a)
+        b = int(b)
+    except (ValueError, TypeError):
+        return jsonify({
+            "error": "a and b must be integers"
+        }), 400
+
+    result = a + b
+
+    return jsonify({
+        "a": a,
+        "b": b,
+        "result": result
+    })
+
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True)
