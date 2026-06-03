@@ -6,6 +6,7 @@ DB_NAME = "study_logs.db"
 ##データ追加関数
 def insert_log(title, minutes, created_at):
     ##接続するデータベース名
+    ##なんかその名前のデータベースなかったら勝手に作ってくれるらしい？？
     conn = sqlite3.connect(DB_NAME)
     ##SQL操作役
     cursor = conn.cursor()
