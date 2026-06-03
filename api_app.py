@@ -19,9 +19,23 @@ def hello():
 ##
 @app.route("/add")
 def add():
-    a = int(request.args.get("a"))
-    b = int(request.args.get("b"))
-##URL参照で値を受けとっている。
+    ##URL参照で値を受けとっている。
+    a_text = request.args.get("a")
+    b_text = request.args.get("b") 
+    ## Noneのエラー処理
+    if a_text is None or b_text is None:
+        return jsonify({
+            "error": "a and b are required"
+        }), 400
+    
+    try:
+        a = int(a_text)
+        b = int(b_text)
+    except ValueError:
+        return jsonify({
+            "error": "a and b must be integers"
+        }), 400
+
     result = a + b
 
     return jsonify({
