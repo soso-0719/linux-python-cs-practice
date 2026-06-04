@@ -6,7 +6,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 DB_NAME = "study_logs.db"
-
+##関数コーナー
 def get_conn():
     ##データ接続
     conn = sqlite3.connect(DB_NAME)
@@ -15,7 +15,7 @@ def get_conn():
     conn.row_factory = sqlite3.Row
     return conn 
 
-def def_db():
+def init_db():
     conn = get_conn()
     cursor = conn.cursor()
     
@@ -30,6 +30,71 @@ def def_db():
     conn.commit()
     conn.close()
 
+
+def create_log(title, minutes, created_at):
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO study_logs (title, minutes, created_at)
+        VALUES (?, ?, ?)
+    """, (title, minutes, created_at))
+
+    conn.commit()
+    new_id = cursor.lastrowid
+    conn.close()
+
+    return new_id
+
+
+def get_all_logs():
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT id, title, minutes, created_at
+        FROM study_logs
+        ORDER BY id DESC
+    """)
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    logs = []
+
+    for row in rows:
+        logs.append({
+            "id": row["id"],
+            "title": row["title"],
+            "minutes": row["minutes"],
+            "created_at": row["created_at"]
+        })
+
+    return logs
+
+
+def get_summary():
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT
+            COUNT(*) AS total_logs,
+            COALESCE(SUM(minutes), 0) AS total_minutes,
+            COALESCE(AVG(minutes), 0) AS average_minutes
+        FROM study_logs
+    """)
+
+    row = cursor.fetchone()
+    conn.close()
+
+    return {
+        "total_logs": row["total_logs"],
+        "total_minutes": row["total_minutes"],
+        "average_minutes": row["average_minutes"]
+    }
+
+##関数コーナー終了
 ##POSTリクエスト
 @app.route("/study-logs", methods=["POST"])
 def post_study_log():
@@ -70,18 +135,9 @@ def post_study_log():
     }), 400
 
     created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    ## INSERTもここでしてる。
+    new_id = create_log(title, minutes, created_at)
 
-    conn = get_conn()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        INSERT INTO study_logs (title, minutes, created_at)
-        VALUES (?, ?, ?)
-    """, (title, minutes, created_at))
-
-    conn.commit()
-    new_id = cursor.lastrowid
-    conn.close()
 ##更新した値の確認
     return jsonify({
         "id": new_id,
@@ -92,53 +148,18 @@ def post_study_log():
 
 @app.route("/study-logs", methods=["GET"])
 def get_study_logs():
-    conn = get_conn()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        SELECT id, title, minutes, created_at
-        FROM study_logs
-        ORDER BY id DESC
-    """)
-    ##セレクトの中身を代入
-    rows = cursor.fetchall()
-    conn.close()
-
-    logs = []
-
-    for row in rows:
-        logs.append({
-            "id": row["id"],
-            "title": row["title"],
-            "minutes": row["minutes"],
-            "created_at": row["created_at"]
-        })
-
+    ##logsはdict
+    logs = get_all_logs()
     return jsonify({
         "logs": logs
     })
 
 @app.route("/study-logs/summary", methods=["GET"])
 def get_study_logs_summary():
-    conn = get_conn()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        SELECT
-            COUNT(*) AS total_logs,
-            COALESCE(SUM(minutes), 0) AS total_minutes,
-            COALESCE(AVG(minutes), 0) AS average_minutes
-        FROM study_logs
-    """)
-
-    row = cursor.fetchone()
-    conn.close()
-
+    summary = get_summary()
     return jsonify({
-        "total_logs": row["total_logs"],
-        "total_minutes": row["total_minutes"],
-        "average_minutes": row["average_minutes"]
-    })
+        "summary":summary
+        })
 
 ##サーバー生きてるか確認
 @app.route("/health")
@@ -185,7 +206,8 @@ def add():
 @app.route("/add-json", methods=["POST"])
 def add_json():
     ##POSTの中のボディのJSONをpythonのディクショナリとして受け取る
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    ## silent = True でHTMLの標準エラーじゃなくて自分のJSONエラーにできるらしい
 
     if data is None:
         return jsonify({
@@ -217,5 +239,5 @@ def add_json():
     })
 
 if __name__ == "__main__":
-    def_db()
+    init_db()
     app.run(host="127.0.0.1", port=5000, debug=True)
