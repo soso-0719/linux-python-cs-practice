@@ -48,6 +48,14 @@ def post_study_log():
         return jsonify({
             "error": "title and minutes are required"
         }), 400
+    
+    title = str(title).strip()##前後の空白を消す
+
+    if title == "":
+        return jsonify({
+        "error": "title must not be empty"
+    }), 400
+
     ##数値変換（数字のみの制約？？に見える）
     try:
         minutes = int(minutes)
@@ -55,6 +63,11 @@ def post_study_log():
         return jsonify({
             "error": "minutes must be an integer"
         }), 400
+    
+    if minutes <= 0:
+        return jsonify({
+        "error": "minutes must be greater than 0"
+    }), 400
 
     created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -104,6 +117,29 @@ def get_study_logs():
     return jsonify({
         "logs": logs
     })
+
+@app.route("/study-logs/summary", methods=["GET"])
+def get_study_logs_summary():
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT
+            COUNT(*) AS total_logs,
+            COALESCE(SUM(minutes), 0) AS total_minutes,
+            COALESCE(AVG(minutes), 0) AS average_minutes
+        FROM study_logs
+    """)
+
+    row = cursor.fetchone()
+    conn.close()
+
+    return jsonify({
+        "total_logs": row["total_logs"],
+        "total_minutes": row["total_minutes"],
+        "average_minutes": row["average_minutes"]
+    })
+
 ##サーバー生きてるか確認
 @app.route("/health")
 def health():
