@@ -1,10 +1,10 @@
 from flask import Flask, request, jsonify
 import sqlite3 
 from datetime import datetime
-
+from flask_cors import CORS
 ##アプリ本体作成
 app = Flask(__name__)
-
+CORS(app)
 DB_NAME = "study_logs.db"
 ##関数コーナー
 def get_conn():
