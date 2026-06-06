@@ -4,7 +4,10 @@ from datetime import datetime
 from flask_cors import CORS
 ##アプリ本体作成
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=[
+    "http://localhost:3000",
+    "http://127.0.0.1:3000"
+])
 DB_NAME = "study_logs.db"
 ##関数コーナー
 def get_conn():

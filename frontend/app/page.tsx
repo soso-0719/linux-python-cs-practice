@@ -33,6 +33,8 @@ export default function Home() {
   const totalMinutes = logs.reduce((total, log) => {
     return total + log.minutes;
   }, 0);
+  const API_BASE_URL = "http://127.0.0.1:5000";
+  //バックエンド側のルート
 
 
   //ReactはuseEffect(async () => { ...}, []);
@@ -40,7 +42,7 @@ export default function Home() {
   async function fetchLogs() {
     try {
       //GET リクエスト
-      const response = await fetch("http://127.0.0.1:5000/study-logs");
+      const response = await fetch(`${API_BASE_URL}/study-logs`);
       //responseにはHTTPレスポンス全体が入ってる
       if (!response.ok) {
         throw new Error("Failed to fetch from study logs");
@@ -50,7 +52,7 @@ export default function Home() {
       setLogs(data.logs);
       // logs stateを更新する。Reactは再描画のためにHomeを再実行してる。
     } catch {
-      setError("Failed to load study logs");
+      setError("Network error. Please check the Flask API server.");
     } finally {
       setLoading(false);
     }
@@ -68,7 +70,7 @@ export default function Home() {
     setError("");
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/study-logs", {
+      const response = await fetch(`${API_BASE_URL}/study-logs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -90,7 +92,7 @@ export default function Home() {
 
       await fetchLogs();
     } catch {
-      setError("Failed to add study log");
+      setError("Network error. Please check the Flask API server.");
     }
   }
 
