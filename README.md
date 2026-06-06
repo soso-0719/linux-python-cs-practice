@@ -4,7 +4,7 @@
 
 単にコードを書くことだけではなく、「なぜ動くのか」「OSやCPU、メモリ、HTTP、DBとどうつながっているのか」を自分の言葉で説明できるようになることを目的にしています。
 
-## Motivation
+## 学習を始めた理由
 
 大学で情報系分野を学ぶ中で、授業で得た知識を実際の開発や就職活動で説明できる力に変えたいと考え、この学習を始めました。
 
@@ -12,7 +12,7 @@
 
 このリポジトリでは、Webアプリ開発だけに閉じず、Linux、Git、Python、C言語、メモリ、コンパイラ、API、DB、React/Next.js などを横断的に学んでいます。
 
-## Goals
+## 目標
 
 - Linux / WSL の基本操作を理解する
 - Git / GitHub を使って変更履歴を管理する
@@ -24,7 +24,7 @@
 - Next.jsからAPIを呼び出し、画面とDBをつなげる
 - 学んだ内容をREADMEやコミット履歴として残す
 
-## Current Main App
+## 現在作っているもの
 
 現在は、学習ログを管理する小さなWebアプリを作成しています。
 
@@ -50,155 +50,155 @@ SQLite database
 - 学習ログを削除する
 - 学習時間の合計を画面に表示する
 
-Main files:
+主なファイル:
 
 ```text
 api_app.py                 Flask API
-frontend/app/page.tsx      Next.js page
-data/study_logs.db         Local SQLite database (not committed)
+frontend/app/page.tsx      Next.jsの画面
+data/study_logs.db         ローカルSQLiteデータベース（Git管理対象外）
 ```
 
-## Tech Stack
+## 使用技術
 
-| Area | Tools / Languages |
+| 分野 | 技術 |
 |---|---|
-| OS / Environment | Windows, WSL, Ubuntu |
-| Version Control | Git, GitHub |
+| OS / 環境 | Windows, WSL, Ubuntu |
+| バージョン管理 | Git, GitHub |
 | Backend | Python, Flask |
-| Database | SQLite |
+| DB | SQLite |
 | Frontend | Next.js, React, TypeScript |
-| CS Practice | C, gcc, NumPy, multiprocessing |
-| Low-level Practice | QEMU, boot sector, simple mini OS experiment |
+| CS基礎 | C, gcc, NumPy, multiprocessing |
+| 低レイヤ学習 | QEMU, boot sector, mini OS実験 |
 
-## API Endpoints
+## API一覧
 
-| Method | Endpoint | Description |
+| Method | Endpoint | 内容 |
 |---|---|---|
-| GET | `/health` | API server health check |
-| GET | `/study-logs` | Get all study logs |
-| POST | `/study-logs` | Create a new study log |
-| PUT | `/study-logs/<id>` | Update a study log |
-| DELETE | `/study-logs/<id>` | Delete a study log |
-| GET | `/study-logs/summary` | Get study log summary |
+| GET | `/health` | APIサーバーの動作確認 |
+| GET | `/study-logs` | 学習ログ一覧を取得 |
+| POST | `/study-logs` | 学習ログを作成 |
+| PUT | `/study-logs/<id>` | 学習ログを更新 |
+| DELETE | `/study-logs/<id>` | 学習ログを削除 |
+| GET | `/study-logs/summary` | 学習ログの集計を取得 |
 
-## Example API Flow
+## APIの処理の流れ
 
-When a new study log is created:
-
-```text
-1. User submits a form in the Next.js frontend
-2. Browser sends a POST request to Flask
-3. Flask reads JSON from the request body
-4. Flask validates title and minutes
-5. SQLite inserts the data
-6. Flask returns JSON
-7. React updates state and re-renders the screen
-```
-
-When a study log is edited:
+学習ログを新しく作成する場合:
 
 ```text
-1. User clicks Edit
-2. React stores the target id in editingId
-3. The form changes from Add mode to Edit mode
-4. User clicks Save
-5. Browser sends a PUT request
-6. Flask updates the row in SQLite
-7. React fetches the latest logs again
+1. Next.jsのフォームに学習内容を入力する
+2. ブラウザがFlaskへPOSTリクエストを送る
+3. FlaskがリクエストボディのJSONを読む
+4. titleとminutesをバリデーションする
+5. SQLiteにデータをINSERTする
+6. FlaskがJSONを返す
+7. Reactがstateを更新し、画面を再描画する
 ```
 
-## Learning Log
+学習ログを編集する場合:
 
-| Day | Topic | Main Files |
+```text
+1. Editボタンを押す
+2. Reactが対象のidをeditingIdに保存する
+3. フォームがAddモードからEditモードに変わる
+4. Saveボタンを押す
+5. ブラウザがPUTリクエストを送る
+6. FlaskがSQLiteの該当行をUPDATEする
+7. Reactが最新のログ一覧を再取得する
+```
+
+## 学習ログ
+
+| Day | テーマ | 主なファイル |
 |---:|---|---|
-| 1 | Linux / Git basics | `README.md` |
-| 2 | First Python program | `practices/python_basics/calc.py` |
-| 3 | Python syntax and Markdown | `README.md` |
-| 4 | Calculator improvement | `practices/python_basics/calc.py` |
-| 5 | File I/O and history log | `practices/python_basics/` |
-| 6 | Benchmark basics | `practices/performance/bench_test.py` |
-| 7 | Memory hierarchy and cache intuition | `practices/performance/memory_bench_test.py` |
-| 8 | Branch and control flow | `practices/performance/branch_bench_test.py` |
-| 9 | C arrays and memory address | `practices/c_memory/array_sum.c` |
-| 10 | Compiler optimization | `practices/c_memory/array_sum.c` |
-| 11 | Profiling and bottleneck | `practices/performance/profile_test.py` |
-| 12 | NumPy and vectorization | `practices/performance/vector_test.py` |
-| 13 | Multiprocessing | `practices/performance/multiprocessing_test.py` |
-| 14 | Review and explanation practice | `README.md` |
-| 15-18 | Mini OS / boot experiment | `mini_os/` |
-| 19 | Flask API basics | `api_app.py` |
-| 20 | SQLite basics | `data/study_logs.db`, `practices/database/db_practice.py` |
+| 1 | Linux / Gitの基礎 | `README.md` |
+| 2 | Python初回実行 | `practices/python_basics/calc.py` |
+| 3 | Pythonの構文とMarkdown | `README.md` |
+| 4 | 電卓プログラムの改善 | `practices/python_basics/calc.py` |
+| 5 | ファイルI/Oと履歴保存 | `practices/python_basics/` |
+| 6 | ベンチマーク入門 | `practices/performance/bench_test.py` |
+| 7 | メモリ階層とキャッシュの直感 | `practices/performance/memory_bench_test.py` |
+| 8 | 分岐と制御フロー | `practices/performance/branch_bench_test.py` |
+| 9 | C言語の配列とメモリアドレス | `practices/c_memory/array_sum.c` |
+| 10 | コンパイラ最適化 | `practices/c_memory/array_sum.c` |
+| 11 | プロファイリングとボトルネック | `practices/performance/profile_test.py` |
+| 12 | NumPyとベクトル化 | `practices/performance/vector_test.py` |
+| 13 | multiprocessing | `practices/performance/multiprocessing_test.py` |
+| 14 | 総復習と説明練習 | `README.md` |
+| 15-18 | Mini OS / boot実験 | `mini_os/` |
+| 19 | Flask APIの基礎 | `api_app.py` |
+| 20 | SQLiteの基礎 | `data/study_logs.db`, `practices/database/db_practice.py` |
 | 21 | Flask API + SQLite | `api_app.py` |
-| 22 | Validation and error handling | `api_app.py` |
-| 23 | Function splitting | `api_app.py` |
-| 24 | Next.js setup | `frontend/` |
-| 25 | Fetch API from Next.js | `frontend/app/page.tsx` |
-| 26 | Form POST from React | `frontend/app/page.tsx` |
-| 27 | CORS and frontend/backend connection | `api_app.py`, `page.tsx` |
-| 28 | DELETE feature | `api_app.py`, `page.tsx` |
-| 29 | UPDATE feature | `api_app.py`, `page.tsx` |
-| 30 | GitHub / README cleanup | `README.md` |
+| 22 | バリデーションとエラー処理 | `api_app.py` |
+| 23 | 関数分割 | `api_app.py` |
+| 24 | Next.jsの導入 | `frontend/` |
+| 25 | Next.jsからAPIを取得 | `frontend/app/page.tsx` |
+| 26 | ReactフォームからPOST | `frontend/app/page.tsx` |
+| 27 | CORSとフロント/バックエンド接続 | `api_app.py`, `page.tsx` |
+| 28 | DELETE機能 | `api_app.py`, `page.tsx` |
+| 29 | UPDATE機能 | `api_app.py`, `page.tsx` |
+| 30 | GitHub / README整理 | `README.md` |
 
-## What I Learned
+## 学んだこと
 
 ### Linux / Git
 
-I learned how files are managed inside directories, how WSL connects Windows and Linux paths, and how Git records changes through add, commit, log, and show.
+ディレクトリ構造、WSL上のLinuxパスとWindowsパスの関係、Gitのadd / commit / log / showによる変更履歴管理を学びました。
 
-### Python / C / Performance
+### Python / C / 性能
 
-I compared Python and C programs, measured execution time, and learned that implementation details such as memory layout, loops, compiler optimization, and vectorization can strongly affect performance.
+PythonとCの実行方法の違い、処理時間の測定、メモリ配置、ループ、コンパイラ最適化、NumPyによるベクトル化が性能に与える影響を学びました。
 
-### OS / Low-level Basics
+### OS / 低レイヤ
 
-Through a mini OS experiment, I learned that programs must eventually become machine-readable binary data, and that bootloaders, memory addresses, CPU execution, and BIOS/QEMU are connected.
+Mini OS実験を通して、プログラムが最終的には機械が読めるバイナリになり、bootloader、メモリアドレス、CPUの実行、BIOS/QEMUがつながっていることを学びました。
 
 ### Web / API / DB
 
-I learned how a browser sends HTTP requests, how Flask receives them, how SQLite stores data, and how React updates the UI through state.
+ブラウザがHTTPリクエストを送り、Flaskが受け取り、SQLiteに保存し、Reactがstateを更新して画面を描き直す流れを学びました。
 
-## How to Run
+## 起動方法
 
-### Backend
+### バックエンド
 
 ```bash
 python3 api_app.py
 ```
 
-Backend URL:
+バックエンドURL:
 
 ```text
 http://127.0.0.1:5000
 ```
 
-SQLite data is stored locally at:
+SQLiteのデータはローカルでは以下に保存されます。
 
 ```text
 data/study_logs.db
 ```
 
-### Frontend
+### フロントエンド
 
 ```bash
 cd frontend
 npm run dev
 ```
 
-Frontend URL:
+フロントエンドURL:
 
 ```text
 http://localhost:3000
 ```
 
-## Requirements
+## 必要なライブラリ
 
-Install Python packages:
+Pythonライブラリのインストール:
 
 ```bash
 python3 -m pip install -r requirements.txt
 ```
 
-Main packages:
+主なライブラリ:
 
 ```text
 flask
@@ -206,18 +206,18 @@ flask-cors
 numpy
 ```
 
-## Related Project
+## 関連プロジェクト
 
-I also developed and published a learning support web app called Focus Grove.
+学習支援Webアプリ「Focus Grove」も開発・公開しています。
 
 ```text
 https://focus-grove.onrender.com/login
 ```
 
-## Next Step
+## 今後の予定
 
-After building this practice project, I plan to develop a more portfolio-oriented application: AI Study Grove.
+この学習リポジトリで得た知識をもとに、次はポートフォリオとして見せやすいアプリ「AI Study Grove」を開発する予定です。
 
-AI Study Grove will use the knowledge from this repository, including API design, database operations, React state management, and AI-assisted learning support.
+AI Study Groveでは、API設計、DB操作、Reactのstate管理に加えて、AIを使った学習支援機能を組み込む予定です。
 
-The goal is to build an application that does not only store study records, but also helps users reflect on what they learned, identify weak points, and generate review questions.
+単に学習記録を保存するだけでなく、学んだ内容の振り返り、苦手ポイントの整理、復習問題の生成までできるアプリを目指します。
