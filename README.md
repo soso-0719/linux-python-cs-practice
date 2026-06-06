@@ -1,207 +1,223 @@
 # Linux Python CS Practice
 
-Linux、Python、Git/GitHub、C言語、コンピュータサイエンス基礎を、実装・測定・説明を通して学習するためのリポジトリです。
+このリポジトリは、Linux / Git / Python / C / CS基礎 / Flask API / SQLite / Next.js を、実際に手を動かしながら学習している記録です。
 
-このリポジトリでは、ただコードを書くのではなく、以下の流れを重視しています。
+単にコードを書くことだけではなく、「なぜ動くのか」「OSやCPU、メモリ、HTTP、DBとどうつながっているのか」を自分の言葉で説明できるようになることを目的にしています。
 
-```text
-コードを書く
-↓
-実行して結果を見る
-↓
-処理時間や挙動を測定する
-↓
-CPU・メモリ・OS・コンパイラなどのCS基礎と結び付けて説明する
-↓
-Git/GitHubで記録する
-```
+## Motivation
 
-## 目的
+大学で情報系分野を学ぶ中で、授業で得た知識を実際の開発や就職活動で説明できる力に変えたいと考え、この学習を始めました。
 
-1年間で、情報系の基礎知識と実装経験を結び付け、長期インターンや就職活動で説明できる実務的な力を身につけることを目的にしています。
+特に、1年後の就職活動までに、基礎知識だけでなく、実際にコードを書き、エラーを調べ、GitHubに記録し、改善していく経験を積みたいと考えています。
 
-特に意識していることは以下です。
+このリポジトリでは、Webアプリ開発だけに閉じず、Linux、Git、Python、C言語、メモリ、コンパイラ、API、DB、React/Next.js などを横断的に学んでいます。
 
-- Linux / WSL の基本操作
-- Git / GitHub による変更履歴管理
-- Pythonによる小さな実装
-- C言語によるメモリ・配列・コンパイルの理解
-- 処理時間の測定
-- コンパイラ最適化
-- プロファイリングとボトルネック分析
-- NumPyによるベクトル化の入口
-- multiprocessingによる並列処理
-- 学んだことをREADMEに説明として残すこと
+## Goals
 
-## 学習Unit一覧
+- Linux / WSL の基本操作を理解する
+- Git / GitHub を使って変更履歴を管理する
+- Pythonで小さなプログラムを作る
+- C言語を通してメモリやコンパイルを理解する
+- 処理時間を測定し、性能差を説明できるようにする
+- FlaskでAPIを作る
+- SQLiteでデータを保存する
+- Next.jsからAPIを呼び出し、画面とDBをつなげる
+- 学んだ内容をREADMEやコミット履歴として残す
 
-| Unit | テーマ | 主なファイル | 学んだ主な内容 |
-|---:|---|---|---|
-| 1 | Linux / Git 初期設定 | `README.md` | WSL、シェル、Git commit |
-| 2 | Python電卓 | `calc.py` | `input()`、`int()`、変数、四則演算 |
-| 3 | Pythonエラー / Markdown | `README.md` | 構文エラー、Markdown、基本コマンド |
-| 4 | 電卓の改善 | `calc.py` | `if`、`elif`、`else`、0除算 |
-| 5 | ファイルI/Oとログ保存 | `calc.py`, `history.txt` | ファイル書き込み、ログ、ストレージ |
-| 6 | ベンチマーク入門 | `bench_test.py` | 経過時間、`time.perf_counter()` |
-| 7 | メモリ階層・キャッシュ | `memory_bench_test.py` | メモリ、キャッシュ、逐次アクセス |
-| 8 | 分岐とbranch prediction | `branch_bench_test.py` | if文、分岐、制御フロー |
-| 9 | C言語とメモリ | `array_sum.c` | 配列、アドレス、コンパイル |
-| 10 | コンパイラ最適化 | `array_sum.c` | `gcc -O0`、`gcc -O2`、warning |
-| 11 | プロファイリング | `profile_test.py` | profiling、bottleneck、測定による改善 |
-| 12 | SIMD / ベクトル化 | `vector_test.py` | NumPy ndarray、vectorization、SIMDの入口 |
-| 13 | マルチコア / multiprocessing | `multiprocessing_test.py` | process、CPUコア、overhead、並列処理 |
+## Current Main App
 
-## 学んだこと
+現在は、学習ログを管理する小さなWebアプリを作成しています。
 
-### 1. 測定してから改善する
-
-プログラムが速いか遅いかを感覚で判断するのではなく、`time.perf_counter()` やCの `clock()` を使って処理時間を測定しました。
-
-測定した例:
-
-- Pythonのループ処理
-- C言語の `-O0` と `-O2` の比較
-- 関数ごとのprofiling
-- Python for文とNumPyの比較
-- single process と multi process の比較
-
-### 2. PythonとCの実行方式の違い
-
-Pythonでは、`.py` ファイルをCPUが直接実行しているわけではなく、`python3` がコードを読みながら実行します。
-
-```bash
-python3 bench_test.py
-```
-
-C言語では、`.c` ファイルをそのまま実行するのではなく、`gcc` で実行ファイルを作ってから実行します。
-
-```bash
-gcc array_sum.c -o array_sum
-./array_sum
-```
-
-この違いから、単純な大量ループではCの方が速くなりやすいことを確認しました。
-
-### 3. メモリ上のデータの持ち方
-
-Pythonのlist、Cの配列、NumPy配列の違いを学びました。
-
-Python list:
+構成は以下の通りです。
 
 ```text
-[参照][参照][参照]
-  ↓     ↓     ↓
- PyInt PyInt PyInt
+Next.js frontend
+  |
+  | HTTP request
+  v
+Flask API
+  |
+  | SQL
+  v
+SQLite database
 ```
 
-C配列 / NumPyの数値配列:
+できること:
+
+- 学習ログ一覧を表示する
+- 学習ログを追加する
+- 学習ログを編集する
+- 学習ログを削除する
+- 学習時間の合計を画面に表示する
+
+Main files:
 
 ```text
-[数値][数値][数値]
+api_app.py                 Flask API
+frontend/app/page.tsx      Next.js page
+data/study_logs.db         Local SQLite database (not committed)
 ```
 
-Python listは柔軟ですが、数値計算では管理コストが大きくなりやすいです。  
-一方、C配列やNumPyの `int64` 配列では、同じ型の数値データが連続して並ぶため、大量データ処理に向いています。
+## Tech Stack
 
-### 4. 並列処理は必ず速いわけではない
+| Area | Tools / Languages |
+|---|---|
+| OS / Environment | Windows, WSL, Ubuntu |
+| Version Control | Git, GitHub |
+| Backend | Python, Flask |
+| Database | SQLite |
+| Frontend | Next.js, React, TypeScript |
+| CS Practice | C, gcc, NumPy, multiprocessing |
+| Low-level Practice | QEMU, boot sector, simple mini OS experiment |
 
-`multiprocessing` を使い、single process と multi process の処理時間を比較しました。
+## API Endpoints
 
-小さい処理では、プロセスを作る・仕事を分ける・結果を集めるといった `overhead` により、multi processの方が遅くなる場合がありました。
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/health` | API server health check |
+| GET | `/study-logs` | Get all study logs |
+| POST | `/study-logs` | Create a new study log |
+| PUT | `/study-logs/<id>` | Update a study log |
+| DELETE | `/study-logs/<id>` | Delete a study log |
+| GET | `/study-logs/summary` | Get study log summary |
 
-一方、大きい処理では、複数コアで処理を分担する効果が出て、multi processの方が速くなる場合がありました。
+## Example API Flow
 
-## 実行方法
+When a new study log is created:
 
-Pythonの例:
+```text
+1. User submits a form in the Next.js frontend
+2. Browser sends a POST request to Flask
+3. Flask reads JSON from the request body
+4. Flask validates title and minutes
+5. SQLite inserts the data
+6. Flask returns JSON
+7. React updates state and re-renders the screen
+```
+
+When a study log is edited:
+
+```text
+1. User clicks Edit
+2. React stores the target id in editingId
+3. The form changes from Add mode to Edit mode
+4. User clicks Save
+5. Browser sends a PUT request
+6. Flask updates the row in SQLite
+7. React fetches the latest logs again
+```
+
+## Learning Log
+
+| Day | Topic | Main Files |
+|---:|---|---|
+| 1 | Linux / Git basics | `README.md` |
+| 2 | First Python program | `practices/python_basics/calc.py` |
+| 3 | Python syntax and Markdown | `README.md` |
+| 4 | Calculator improvement | `practices/python_basics/calc.py` |
+| 5 | File I/O and history log | `practices/python_basics/` |
+| 6 | Benchmark basics | `practices/performance/bench_test.py` |
+| 7 | Memory hierarchy and cache intuition | `practices/performance/memory_bench_test.py` |
+| 8 | Branch and control flow | `practices/performance/branch_bench_test.py` |
+| 9 | C arrays and memory address | `practices/c_memory/array_sum.c` |
+| 10 | Compiler optimization | `practices/c_memory/array_sum.c` |
+| 11 | Profiling and bottleneck | `practices/performance/profile_test.py` |
+| 12 | NumPy and vectorization | `practices/performance/vector_test.py` |
+| 13 | Multiprocessing | `practices/performance/multiprocessing_test.py` |
+| 14 | Review and explanation practice | `README.md` |
+| 15-18 | Mini OS / boot experiment | `mini_os/` |
+| 19 | Flask API basics | `api_app.py` |
+| 20 | SQLite basics | `data/study_logs.db`, `practices/database/db_practice.py` |
+| 21 | Flask API + SQLite | `api_app.py` |
+| 22 | Validation and error handling | `api_app.py` |
+| 23 | Function splitting | `api_app.py` |
+| 24 | Next.js setup | `frontend/` |
+| 25 | Fetch API from Next.js | `frontend/app/page.tsx` |
+| 26 | Form POST from React | `frontend/app/page.tsx` |
+| 27 | CORS and frontend/backend connection | `api_app.py`, `page.tsx` |
+| 28 | DELETE feature | `api_app.py`, `page.tsx` |
+| 29 | UPDATE feature | `api_app.py`, `page.tsx` |
+| 30 | GitHub / README cleanup | `README.md` |
+
+## What I Learned
+
+### Linux / Git
+
+I learned how files are managed inside directories, how WSL connects Windows and Linux paths, and how Git records changes through add, commit, log, and show.
+
+### Python / C / Performance
+
+I compared Python and C programs, measured execution time, and learned that implementation details such as memory layout, loops, compiler optimization, and vectorization can strongly affect performance.
+
+### OS / Low-level Basics
+
+Through a mini OS experiment, I learned that programs must eventually become machine-readable binary data, and that bootloaders, memory addresses, CPU execution, and BIOS/QEMU are connected.
+
+### Web / API / DB
+
+I learned how a browser sends HTTP requests, how Flask receives them, how SQLite stores data, and how React updates the UI through state.
+
+## How to Run
+
+### Backend
 
 ```bash
-python3 bench_test.py
-python3 memory_bench_test.py
-python3 branch_bench_test.py
-python3 profile_test.py
-python3 vector_test.py
-python3 multiprocessing_test.py
+python3 api_app.py
 ```
 
-C言語の例:
+Backend URL:
+
+```text
+http://127.0.0.1:5000
+```
+
+SQLite data is stored locally at:
+
+```text
+data/study_logs.db
+```
+
+### Frontend
 
 ```bash
-gcc array_sum.c -o array_sum
-./array_sum
+cd frontend
+npm run dev
 ```
 
-コンパイラ最適化の比較:
+Frontend URL:
 
-```bash
-gcc -O0 array_sum.c -o array_sum_O0
-gcc -O2 array_sum.c -o array_sum_O2
-./array_sum_O0
-./array_sum_O2
+```text
+http://localhost:3000
 ```
 
-## 必要ライブラリ
+## Requirements
 
-Pythonの外部ライブラリは `requirements.txt` に記録しています。
-
-インストール:
+Install Python packages:
 
 ```bash
 python3 -m pip install -r requirements.txt
 ```
 
-現在使用している主なライブラリ:
+Main packages:
 
 ```text
+flask
+flask-cors
 numpy
 ```
 
-## Git / GitHubでの管理方針
+## Related Project
 
-ソースコードと学習ログはGitで管理します。
-
-一方、コンパイルで生成される実行ファイルや、環境ごとに作られるファイルは `.gitignore` で除外します。
-
-除外している例:
-
-- `array_sum`
-- `array_sum_O0`
-- `array_sum_O2`
-- `.venv/`
-- `__pycache__/`
-
-## 現在の到達地点
-
-Unit 13まで完了しています。
-
-現在理解した主な内容:
-
-- Linux / WSLでの開発操作
-- Git/GitHubによる履歴管理
-- Pythonの基本文法
-- ファイルI/Oとログ保存
-- ベンチマーク
-- メモリ階層とキャッシュの入口
-- 分岐と制御フロー
-- C言語の配列とアドレス
-- コンパイラ最適化
-- profilingとbottleneck
-- NumPyによるベクトル化
-- multiprocessingによる並列処理
-
-## 今後の予定
-
-- Unit 14: 総復習・説明化
-- Unit 15: ミニOS開発の準備
-- QEMUを使った小さいOS実験
-- HTTP / API / DB
-- Docker
-- AI APIの活用
-
-## 関連成果物
-
-学習支援Webアプリ「Focus Grove」も開発・公開しています。
+I also developed and published a learning support web app called Focus Grove.
 
 ```text
 https://focus-grove.onrender.com/login
 ```
+
+## Next Step
+
+After building this practice project, I plan to develop a more portfolio-oriented application: AI Study Grove.
+
+AI Study Grove will use the knowledge from this repository, including API design, database operations, React state management, and AI-assisted learning support.
+
+The goal is to build an application that does not only store study records, but also helps users reflect on what they learned, identify weak points, and generate review questions.

@@ -8,7 +8,7 @@ CORS(app, origins=[
     "http://localhost:3000",
     "http://127.0.0.1:3000"
 ])
-DB_NAME = "study_logs.db"
+DB_NAME = "data/study_logs.db"
 ##関数コーナー
 def get_conn():
     ##データ接続
@@ -179,6 +179,65 @@ def delete_study_log(log_id):
     return jsonify({
         "message": "study log deleted",
         "id": log_id
+    })
+
+@app.route("/study-logs/<int:log_id>", methods=["PUT"])
+def update_study_log(log_id):
+    data = request.get_json(silent=True)
+
+    if data is None:
+        return jsonify({
+            "error": "JSON body is required"
+        }), 400
+
+    title = data.get("title")
+    minutes = data.get("minutes")
+
+    if title is None or minutes is None:
+        return jsonify({
+            "error": "title and minutes are required"
+        }), 400
+
+    if str(title).strip() == "":
+        return jsonify({
+            "error": "title must not be empty"
+        }), 400
+
+    try:
+        minutes = int(minutes)
+    except (ValueError, TypeError):
+        return jsonify({
+            "error": "minutes must be an integer"
+        }), 400
+
+    if minutes <= 0:
+        return jsonify({
+            "error": "minutes must be greater than 0"
+        }), 400
+
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE study_logs
+        SET title = ?, minutes = ?
+        WHERE id = ?
+    """, (title, minutes, log_id))
+
+    conn.commit()
+    updated_count = cursor.rowcount
+    conn.close()
+
+    if updated_count == 0:
+        return jsonify({
+            "error": "study log not found"
+        }), 404
+
+    return jsonify({
+        "message": "study log updated",
+        "id": log_id,
+        "title": title,
+        "minutes": minutes
     })
 
 @app.route("/study-logs/summary", methods=["GET"])

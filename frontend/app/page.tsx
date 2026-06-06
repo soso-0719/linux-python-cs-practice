@@ -27,6 +27,7 @@ export default function Home() {
   const [error, setError] = useState("");
   const [title, setTitle] = useState("");
   const [minutes, setMinutes] = useState("");
+  const [editingId, setEditingId] = useState<number | null>(null);//edit状態の管理
   //setlogsはuseState は内部的に、こういう2つ返す。
   //[現在の値, 更新するための関数]
   //今回なら、[logs, setLogs]に分けて受け取っている。
@@ -69,9 +70,16 @@ export default function Home() {
     //ようはStateがリロードされないようにする
     setError("");
 
+    const url =
+      editingId === null
+        ? `${API_BASE_URL}/study-logs`
+        : `${API_BASE_URL}/study-logs/${editingId}`;
+    //modeで返す変数を変える
+    const method = editingId === null ? "POST" : "PUT";
+
     try {
-      const response = await fetch(`${API_BASE_URL}/study-logs`, {
-        method: "POST",
+      const response = await fetch(url, {
+        method: method,
         headers: {
           "Content-Type": "application/json",
         },
@@ -86,9 +94,10 @@ export default function Home() {
         setError(errorData.error || "Failed to add study log");
         return;
       }
-
+      //初期化
       setTitle("");
       setMinutes("");
+      setEditingId(null);
 
       await fetchLogs();
     } catch {
@@ -114,6 +123,15 @@ export default function Home() {
       setError("Network error. Please check the Flask API server.");
     }
   }
+
+  function handleEdit(log: StudyLog) {
+    setEditingId(log.id);
+    setTitle(log.title);
+    setMinutes(String(log.minutes));
+    setError("");
+  }
+
+
   return (
     <main>
       <h1>Study Log App</h1>
@@ -163,7 +181,7 @@ export default function Home() {
                 <p>Title: {log.title}</p>
                 <p>Minutes: {log.minutes}</p>
                 <p>Created At: {log.created_at}</p>
-
+                <button onClick={() => handleEdit(log)}>Edit</button>
                 <button onClick={() => handleDelete(log.id)}>Delete</button>
               </div>
             ))}

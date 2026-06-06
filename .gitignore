@@ -3,6 +3,17 @@ array_sum_O0
 array_sum_O2
 .venv/
 __pycache__/
+*.pyc
+*.db
+data/*.db
+
+# Next.js generated files
+frontend/node_modules/
+frontend/.next/
+
+# Generated local artifacts
+artifacts/
+
 # mini OS generated files
 mini_os/*.o
 mini_os/*.elf
