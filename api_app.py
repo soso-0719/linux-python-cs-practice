@@ -157,6 +157,30 @@ def get_study_logs():
         "logs": logs
     })
 
+@app.route("/study-logs/<int:log_id>", methods=["DELETE"])
+def delete_study_log(log_id):
+    conn = get_conn()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        DELETE FROM study_logs
+        WHERE id = ?
+    """, (log_id,))
+## Whereマジ大事
+    conn.commit()
+    deleted_count = cursor.rowcount
+    conn.close()
+
+    if deleted_count == 0:
+        return jsonify({
+            "error": "study log not found"
+        }), 404
+
+    return jsonify({
+        "message": "study log deleted",
+        "id": log_id
+    })
+
 @app.route("/study-logs/summary", methods=["GET"])
 def get_study_logs_summary():
     summary = get_summary()

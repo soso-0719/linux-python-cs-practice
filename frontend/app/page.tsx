@@ -36,7 +36,7 @@ export default function Home() {
   const API_BASE_URL = "http://127.0.0.1:5000";
   //バックエンド側のルート
 
-
+  //GET
   //ReactはuseEffect(async () => { ...}, []);
   // useEffect の関数自体を async（こいつでawait使えるようになる） にするのは基本避けるべきらしい。
   async function fetchLogs() {
@@ -61,7 +61,7 @@ export default function Home() {
   useEffect(() => {
     fetchLogs();
   }, []);
-
+  //POST
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     //event は、フォーム送信が起きた時のイベント情報
@@ -95,7 +95,25 @@ export default function Home() {
       setError("Network error. Please check the Flask API server.");
     }
   }
+  //DELETE
+  async function handleDelete(id: number) {
+    setError("");
 
+    try {
+      const response = await fetch(`${API_BASE_URL}/study-logs/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        setError("Failed to delete study log");
+        return;
+      }
+
+      await fetchLogs();
+    } catch {
+      setError("Network error. Please check the Flask API server.");
+    }
+  }
   return (
     <main>
       <h1>Study Log App</h1>
@@ -145,6 +163,8 @@ export default function Home() {
                 <p>Title: {log.title}</p>
                 <p>Minutes: {log.minutes}</p>
                 <p>Created At: {log.created_at}</p>
+
+                <button onClick={() => handleDelete(log.id)}>Delete</button>
               </div>
             ))}
           </div>
