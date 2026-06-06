@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { FormEvent } from "react";
 
 type StudyLog = {
   id: number;
@@ -24,37 +25,74 @@ export default function Home() {
   //logsにはStudylogの型の配列のみ入る
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [title, setTitle] = useState("");
+  const [minutes, setMinutes] = useState("");
   //setlogsはuseState は内部的に、こういう2つ返す。
   //[現在の値, 更新するための関数]
   //今回なら、[logs, setLogs]に分けて受け取っている。
   const totalMinutes = logs.reduce((total, log) => {
     return total + log.minutes;
   }, 0);
+
+
+  //ReactはuseEffect(async () => { ...}, []);
+  // useEffect の関数自体を async（こいつでawait使えるようになる） にするのは基本避けるべきらしい。
+  async function fetchLogs() {
+    try {
+      //GET リクエスト
+      const response = await fetch("http://127.0.0.1:5000/study-logs");
+      //responseにはHTTPレスポンス全体が入ってる
+      if (!response.ok) {
+        throw new Error("Failed to fetch from study logs");
+      }
+
+      const data: LogsResponse = await response.json();//bodyにあるjson返す
+      setLogs(data.logs);
+      // logs stateを更新する。Reactは再描画のためにHomeを再実行してる。
+    } catch {
+      setError("Failed to load study logs");
+    } finally {
+      setLoading(false);
+    }
+  }
   //画面が表示されたあとに1回だけやりたい処理
   useEffect(() => {
-    //ReactはuseEffect(async () => { ...}, []);
-    // useEffect の関数自体を async（こいつでawait使えるようになる） にするのは基本避けるべきらしい。
-    async function fetchLogs() {
-      try {
-        //GET リクエスト
-        const response = await fetch("http://127.0.0.1:5000/study-logs");
-        //responseにはHTTPレスポンス全体が入ってる
-        if (!response.ok) {
-          throw new Error("Failed to fetch from study logs");
-        }
-
-        const data: LogsResponse = await response.json();//bodyにあるjson返す
-        setLogs(data.logs);
-        //ここではReactがまたHome()を実行している。
-      } catch {
-        setError("Failed to load study logs");
-      } finally {
-        setLoading(false);
-      }
-    }
-
     fetchLogs();
   }, []);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    //event は、フォーム送信が起きた時のイベント情報
+    //preventDefaultはHTML標準のフォームの送信を止める。
+    //ようはStateがリロードされないようにする
+    setError("");
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/study-logs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: title,
+          minutes: minutes,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.error || "Failed to add study log");
+        return;
+      }
+
+      setTitle("");
+      setMinutes("");
+
+      await fetchLogs();
+    } catch {
+      setError("Failed to add study log");
+    }
+  }
 
   return (
     <main>
@@ -70,9 +108,21 @@ export default function Home() {
       <section>
         <h2>Add Study Log</h2>
 
-        <input placeholder="Title" />
-        <input placeholder="Minutes" />
-        <button>Add</button>
+        <form onSubmit={handleSubmit}>
+          <input
+            placeholder="Title"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+          />
+
+          <input
+            placeholder="Minutes"
+            value={minutes}
+            onChange={(event) => setMinutes(event.target.value)}
+          />
+
+          <button type="submit">Add</button>
+        </form>
       </section>
 
       <section>
